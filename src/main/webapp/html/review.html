@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰 게시판</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/review.css">
+</head>
+<body>
+    <div class="logo image">
+        <h1><a href="index.html">SUMONDE</a></h1>
+    </div>
+    <br><br>
+    
+    <div class="board-container">
+        <table class="board-table">
+            <thead>
+                <tr>
+                    <th>글번호</th>
+                    <th>아이디</th>
+                    <th>제목</th>
+                    <th>내용</th>
+                    <th>날짜</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 추가 게시글 -->
+<!--                 <tr>
+                    <td>1</td>
+                    <td>sumin</td>
+                    <td><a href="#">첫 번째 리뷰</a></td>
+                    <td>이 제품 정말 좋아요!</td>
+                    <td>2024/08/29</td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+    <br><br>
+    <footer class="footer">
+        <div class="footer-info">
+            <a href="index.html">홈으로</a> | 
+            <a href="#" id="writeReviewBtn">글쓰기</a> | 
+            <a href="#">로그아웃</a>
+        </div>
+    </footer>
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<!-- 템플릿으로 사용할 HTML 태그(붕어빵 틀 제조) -->
+<script type="text/javascript" id="itemTemplate"> 
+<tr>
+	<td class="review_seq">${ review_seq }</td> 
+	<td class="user_id">${ user_id }</td>
+	<td class="title">${ title }</td>
+	<td class="content">${ content }</td>
+	<td class="logtime">${ logtime }</td>
+</tr>
+</script> 
+<!-- 템플릿 끝 -->
+<script type="text/javascript">
+$(function () {
+	$.ajax({
+		type: 'get',
+		url: '../jsp/reviewlist.jsp',
+		dataType: 'json',
+		success: function(data){
+			$.each(data, function(index, item) {
+				let row = `
+					<tr onclick="location.href='review_detail.html?review_seq=${item.review_seq}'">
+						<td>${item.review_seq}</td>
+						<td>${item.user_id}</td>
+						<td>${item.title}</a></td>
+						<td>${item.content}</td>
+						<td>${item.logtime}</td>
+					</tr>
+				`;
+				$('tbody').append(row);
+			});     
+        },
+		error: function(e){
+			console.log(e);
+		}
+	});
+	
+	 // 글쓰기 버튼 클릭 시 동작
+    $('#writeReviewBtn').on('click', function(event) {
+        event.preventDefault();
+
+        // localStorage에서 user_seq 값을 가져옴
+        let userSeq = localStorage.getItem('user_seq');
+
+        if (userSeq === null) {
+            // 로그인 상태가 아닌 경우
+            alert('로그인이 필요합니다.');
+            window.location.href = 'login.html';
+        } else {
+            // 로그인 상태인 경우
+            window.location.href = 'write_review.html';
+        }
+    });
+});
+</script>
+</body>
+</html>

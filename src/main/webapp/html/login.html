@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="icon" href="/path/to/your/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>  
+    <div class="logo image">
+        <h1><a href="index.html">SUMONDE</a></h1>
+    </div>
+    <br><br>
+    
+    <form>
+        <div class="form-group">
+            <input type="text" class="form-control" id="user_id" name="user_id" aria-describedby="emailHelp" placeholder="아이디">
+            <div id="idDiv"></div>
+        </div>
+        
+ 
+        <div class="form-group">
+            <input type="password" class="form-control" id="user_pwd" name="user_pwd" placeholder="비밀번호">
+       		<div id="pwdDiv"></div>
+        </div>
+ 
+        <div class="login-button">
+            <button type="submit" class="btn btn-primary">로그인</button>
+        </div>
+ 
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1" >
+            <label class="form-check-label" for="exampleCheck1">로그인 상태 유지</label>
+        </div>
+    </form>
+ 
+    <hr width="350px" align="center">
+    <p class="easy-login" align="center">더욱 간편한 로그인</p>
+ 
+    <br>
+ 
+    <div class="button-group">
+        <button type="button" class="btn btn-primary btn-lg">QR코드 로그인</button>
+        <button type="button" class="btn btn-secondary btn-lg">일회용 번호 로그인</button>
+    </div>
+    <br><br>
+    <footer class="footer">
+        <div class="footer-info">
+            <a href="index.html">홈으로</a> | 
+            <a href="#">아이디 찾기</a> | 
+            <a href="#">비밀번호 찾기</a> | 
+            <a href="join.html">회원가입</a><br> 
+        </div>
+    </footer>
+    
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	$('form').on('submit', function(event){
+		event.preventDefault(); 
+		
+		$('#idDiv').empty();
+		$('#pwdDiv').empty();	
+		let isValid = true;
+		
+		// 아이디 검사
+		if($('#user_id').val() == ''){
+			$('#idDiv').html('아이디를 입력하세요.');
+		    $('#user_id').focus();
+		    isValid = false;
+	    }
+	    // 비밀번호 검사
+	    if($('#user_pwd').val() == ''){
+		    $('#pwdDiv').html('비밀번호를 입력하세요.');
+		    $('#user_pwd').focus();
+		    isValid = false;
+	   }
+	    
+		// 유효성 검사를 모두 통과한 경우에만 ajax 요청 실행한다.
+		if(isValid){
+			$.ajax({
+				type: 'post',
+				url: '../jsp/login.jsp',
+				data: $(this).serialize(),
+				dataType: 'text',
+				success: function(data){
+				console.log(data);				   
+				if(data != 'null'){
+					// user_seq를 localStorage에 저장
+					localStorage.setItem('user_seq', data);
+					alert(data + '님 환영합니다.');
+					window.location.href = "index.html";  // 회원가입 성공 시 페이지 이동
+				}else{
+					$('#pwdDiv').html('아이디 또는 비밀번호가 잘못 되었습니다.').css('color', 'red');
+				}
+			},
+				error: function(e){
+				console.log(e);
+				}
+			});
+		}
+	});
+});
+</script>
+</body>
+</html>

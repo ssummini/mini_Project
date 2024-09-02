@@ -1,0 +1,107 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.logo h1 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.logo a {
+    text-decoration: none;
+    color: #343a40;
+}
+
+.detail-container, .edit-container {
+    width: 60%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.detail-container h2, .edit-container h2 {
+    text-align: center;
+    color: #495057;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #FFC4F4;
+    padding-bottom: 10px;
+}
+
+.review-details p, .edit-details p {
+    font-size: 1.1em;
+    margin: 15px 0;
+    line-height: 1.6;
+}
+
+.review-details strong, .edit-details strong {
+    color: #495057;
+}
+
+.edit-details input[type="text"], .edit-details textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.edit-details textarea {
+    height: 100px;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.actions button {
+    background-color: #FFC4F4;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1em;
+    border-radius: 5px;
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background-color: #F2BAE8;
+}
+
+.footer-info {
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+.footer-info a {
+    color: #6c757d;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.footer-info a:hover {
+    text-decoration: underline;
+    color: #343a40;
+}

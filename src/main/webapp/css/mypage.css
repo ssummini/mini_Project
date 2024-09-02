@@ -1,0 +1,180 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.logo h1 {
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.logo a {
+    text-decoration: none;
+    color: #333;
+}
+
+.mypage-container {
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.user-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-save, .btn-delete {
+    width: 48%;
+    padding: 10px;
+    background-color: #FFC4F4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-delete {
+    background-color: #6c757d;
+}
+
+.btn-save:hover, .btn-delete:hover {
+    opacity: 0.9;
+}
+
+.footer-info {
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+.footer-info a {
+    color: #6c757d;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.footer-info a:hover {
+    text-decoration: underline;
+}
+
+/* Modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 400px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #6c757d;
+}
+
+.modal-content p {
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+/* Input styling inside the modal */
+.modal-content input[type="text"],
+.modal-content input[type="password"] {
+    width: calc(100% - 20px); /* Adjusting width to account for padding */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Close button styling */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Confirm delete button styling */
+.btn-confirm-delete {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-confirm-delete:hover {
+    opacity: 0.9;
+}

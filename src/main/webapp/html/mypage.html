@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/mypage.css">
+</head>
+<body>
+    <div class="logo image">
+        <h1><a href="index.html">SUMONDE</a></h1>
+    </div>
+    <br><br>
+
+    <div class="mypage-container">
+        <h2>회원정보 수정</h2>
+        <form class="user-form">
+            <div class="form-group">
+                <label for="user_id">아이디</label>
+                <input type="text" id="user_id" name="user_id" placeholder="현재 아이디">
+                <div id="idDiv"></div>
+            </div>
+            <div class="form-group">
+                <label for="user_pwd">비밀번호</label>
+                <input type="password" id="user_pwd" name="user_pwd" placeholder="현재 비밀번호">
+                <div id="pwdDiv"></div>
+            </div>
+            <div class="form-group">
+                <label for="new_pwd">새 비밀번호</label>
+                <input type="password" id="new_pwd" name="new_pwd">
+                <div id="new_pwdDiv"></div>
+            </div>
+            <div class="form-group">
+                <label for="confirm_pwd">비밀번호 확인</label>
+                <input type="password" id="confirm_pwd" name="confirm_pwd">
+                <div id="confirm_pwdDiv"></div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-save">정보 수정</button>
+                <button type="button" class="btn-delete">회원 탈퇴</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>회원 탈퇴 확인</h2>
+            <p>계속하려면 비밀번호를 입력하십시오:</p>
+            <input type="text" id="deleteId" placeholder="아이디 입력"><br>
+            <input type="password" id="deletePassword" placeholder="비밀번호 입력">
+            <div id="delete_pwdDiv"></div>
+            <button class="btn-confirm-delete">확인</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-info">
+            <a href="index.html">홈으로</a> | 
+            <a href="#">로그아웃</a>
+        </div>
+    </footer>
+    
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+
+$(function () {
+    $('#user_pwd').on('focusout', function() {
+        let user_id = $('#user_id').val();
+        let user_pwd = $('#user_pwd').val();
+
+        if(user_id && user_pwd) {
+            $.ajax({
+                type: 'post',
+                url: '../jsp/checkUser.jsp',
+                data: { 
+                    'user_id': user_id, 
+                    'user_pwd': user_pwd 
+                },
+                dataType: 'text',
+                success: function(data) {
+                    if(data == 1) {
+                        $('#pwdDiv').html(''); 
+                    } else {
+                        $('#pwdDiv').html('아이디 또는 비밀번호가 잘못 입력되었습니다.').css('color', 'red');
+                    }
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
+        }
+    });
+    
+    $('form').on('submit', function(event){
+        event.preventDefault();
+        $('#idDiv').empty();
+        $('#pwdDiv').empty();
+        $('#new_pwdDiv').empty();
+        $('#confirm_pwdDiv').empty();
+        let isValid = true;
+        
+        // 아이디 검사
+        if($('#user_id').val() == ''){
+            $('#idDiv').html('아이디를 입력하세요.').css('color', 'red');
+            $('#user_id').focus();
+            isValid = false;
+        }
+        
+        // 비밀번호 검사
+        if($('#user_pwd').val().trim() == ''){
+            $('#pwdDiv').html('비밀번호를 입력하세요.').css('color', 'red');
+            $('#user_pwd').focus();
+            isValid = false;
+        }
+        
+        // 새 비밀번호 검사
+        if($('#new_pwd').val().trim() == ''){
+            $('#new_pwdDiv').html('새 비밀번호를 입력하세요.').css('color', 'red');
+            $('#new_pwd').focus();
+            isValid = false;
+        }
+        
+        // 비밀번호 확인 검사
+        if($('#confirm_pwd').val() == ''){
+            $('#confirm_pwdDiv').html('비밀번호 확인을 해주세요.').css('color', 'red');
+            $('#confirm_pwd').focus();
+            isValid = false;
+        } else if($('#new_pwd').val() != $('#confirm_pwd').val()){
+            $('#confirm_pwdDiv').html('비밀번호가 일치하지 않습니다.').css('color', 'red');
+            $('#confirm_pwd').val('');
+            $('#confirm_pwd').focus();
+            isValid = false;
+        }
+        
+        // 현재 비밀번호 확인 후 제출
+        if(isValid){
+            $.ajax({
+                type: 'post',
+                url: '../jsp/checkUser.jsp',
+                data: { 
+                    'user_id': $('#user_id').val(), 
+                    'user_pwd': $('#user_pwd').val() 
+                },
+                dataType: 'text',
+                success: function(data) {
+                    if(data == 1) {
+                        // 현재 비밀번호가 일치하면 정보 수정
+                        $.ajax({
+                            type: 'post',
+                            url: '../jsp/update.jsp',
+                            data: $('form').serialize(),
+                            dataType: 'text',
+                            success: function(data){
+                                if(data != 0){
+                                    alert('회원정보가 수정되었습니다.');
+                                    window.location.href = "index.html";
+                                } else {
+                                    alert('회원정보 수정에 실패하였습니다.');
+                                }
+                            },
+                            error: function(e){
+                                console.log(e);
+                            }
+                        });
+                    } else {
+                        $('#pwdDiv').html('아이디 또는 비밀번호가 잘못 입력되었습니다.').css('color', 'red');
+                    }
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
+        }
+    });
+    
+    // 회원 탈퇴 버튼을 클릭했을 때 모달을 보이게 하기
+    $('.btn-delete').on('click', function(){
+        $('#deleteModal').show();
+    });
+
+    // 모달의 닫기 버튼을 클릭했을 때 모달을 안 보이게 하기
+    $('.close').on('click', function(){
+        $('#deleteModal').hide();
+    });
+    
+    $('.btn-confirm-delete').on('click', function(){
+        let user_id = $('#deleteId').val();
+        let user_pwd = $('#deletePassword').val();
+        let isValid = true;
+        
+        // 아이디 검사
+        if(user_id == ''){
+            $('#delete_pwdDiv').html('아이디를 입력하세요.');
+            $('#deleteId').focus();
+            isValid = false;
+        }
+        // 비밀번호 검사
+        if(user_pwd.trim() == ''){
+            $('#delete_pwdDiv').html('비밀번호를 입력하세요.');
+            $('#deletePassword').focus();
+            isValid = false;
+        }
+        
+        if(isValid) {
+            $.ajax({
+                type: 'post',
+                url: '../jsp/checkUser.jsp',
+                data: { 
+                    'user_id': user_id, 
+                    'user_pwd': user_pwd 
+                },
+                dataType: 'text',
+                success: function(data) {
+                    if(data == 1) {
+                        if(confirm('정말 회원탈퇴를 하시겠습니까?')){
+                            $.ajax({
+                                type: 'post',
+                                url: '../jsp/deleteUser.jsp',
+                                data: { 
+                                    'user_id': user_id, 
+                                    'user_pwd': user_pwd 
+                                },
+                                dataType: 'text',
+                                success: function(data) {
+                                    if(data == 1) {
+                                    	// 회원탈퇴 성공 시 localStorage에서 user_seq 삭제
+                                        localStorage.removeItem('user_seq');
+                                        alert('회원탈퇴에 성공하셨습니다.');
+                                        window.location.href = 'index.html';
+                                    } else {
+                                        alert('회원탈퇴에 실패하셨습니다.');
+                                    }
+                                },
+                                error: function(e) {
+                                    console.log(e);
+                                }
+                            });
+                        }
+                    } else {
+                        $('#delete_pwdDiv').html('아이디 또는 비밀번호가 잘못 입력되었습니다.').css('color', 'red');
+                    }
+                },
+                error: function(e) {
+                    console.log(e);
+                }
+            });
+        }
+    });
+});
+
+</script>   
+</body>
+</html>

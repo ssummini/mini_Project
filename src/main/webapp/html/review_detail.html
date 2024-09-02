@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰 상세보기</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/review_detail.css">
+</head>
+<body>
+    <div class="logo image">
+        <h1><a href="index.html">SUMONDE</a></h1>
+    </div>
+    <br><br>
+    
+    <div class="detail-container">
+        <h2>리뷰 상세보기</h2>
+        <div class="review-details">
+            <p><strong>아이디:</strong> <span id="user_id"></span></p>
+            <p><strong>제목:</strong> <span id="title"></span></p>
+            <p><strong>내용:</strong> <span id="content"></span></p>
+            <p><strong>날짜:</strong> <span id="logtime"></span></p>
+        </div>
+        <div class="actions">
+            <button id="btn-edit">수정</button>
+            <button id="btn-delete">삭제</button>
+        </div>
+    </div>
+    
+	<!-- 리뷰 수정 -->
+    <div class="edit-container" style="display: none;">
+        <h2>리뷰 수정하기</h2>
+        <div class="edit-details">
+            <p><strong>제목:</strong> <input type="text" id="edit_title" /></p>
+            <div id="edit_titleDiv"></div>
+            <p><strong>내용:</strong> <textarea id="edit_content"></textarea></p>
+            <div id="edit_contentDiv"></div>
+        </div>
+        <div class="actions">
+            <button id="btn-save">저장</button>
+            <button id="btn-cancel">취소</button>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="footer-info">
+            <a href="review.html">뒤로가기</a>
+        </div>
+    </footer>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const reviewSeq = urlParams.get('review_seq');
+    console.log("Review Sequence:", reviewSeq);
+    
+    // 리뷰 상세 데이터 가져오기
+    $.ajax({
+        type: 'post',
+        url: '../jsp/review_detail.jsp',
+        data: { 
+            'reviewSeq':reviewSeq 
+        },
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+            if (data) {
+                $('#user_id').html(data.user_id);
+                $('#title').html(data.title);
+                $('#content').html(data.content);
+                $('#logtime').html(data.logtime);
+            } else {
+                alert("리뷰 정보를 불러오지 못했습니다.");
+            }
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+    
+    $('#btn-delete').on('click', function(){
+    	if(confirm('리뷰를 삭제하시겠습니까?')){
+    		$.ajax({
+    			type: 'post',
+    			url: '../jsp/review_delete.jsp',
+    			data: {
+    				'reviewSeq': reviewSeq
+    			},
+    			dataType: 'text',
+    			success: function(data){
+    				console.log(data);
+    				if(data == 1){
+    					alert('리뷰가 삭제되었습니다.');
+    					window.location.href = "review.html";
+    				}else{
+    					alert('리뷰 삭제에 실패하였습니다.');
+    				}
+    			},
+    			error: function(e){
+    				console.log(e);
+    			}
+    		});
+    	}
+    });
+    
+    $('#btn-edit').on('click', function(){
+        $('.detail-container').hide();
+        $('.edit-container').show();
+    });
+
+    $('#btn-cancel').on('click', function(){
+        $('.edit-container').hide();
+        $('.detail-container').show();
+    });
+    
+    $('#btn-save').on('click', function(){
+    	let isValid = true;
+    	
+        // 제목검사
+        if($('#edit_title').val() == ''){
+            $('#edit_titleDiv').html('제목을 입력하세요.').css('color', 'red');
+            $('#edit_title').focus();
+            isValid = false;
+        }
+        
+        // 내용검사
+        if($('#edit_content').val() == ''){
+            $('#edit_contentDiv').html('내용을 입력하세요.').css('color', 'red');
+            $('#edit_content').focus();
+            isValid = false;
+        }
+        
+        if(isValid){
+        	const updatedTitle = $('#edit_title').val();  // 수정된 제목
+            const updatedContent = $('#edit_content').val();  // 수정된 내용
+            
+        	$.ajax({
+        		type: 'post',
+        		url: '../jsp/update_review.jsp',
+                data: {
+                    'reviewSeq': reviewSeq,
+                    'title': updatedTitle,
+                    'content': updatedContent
+                },
+                dataType: 'text',
+                success: function(data){
+                	if(data == 1){
+                		alert('리뷰가 수정되었습니다.');
+                		window.location.href = "review.html";
+                	}else{
+                		alert("리뷰수정에 실패하였습니다.");
+                	}
+                },error:  function(e){
+            		console.log(e);
+            	}
+        	});
+        }
+    });
+});
+</script>
+</html>
